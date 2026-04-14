@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: patient-tracker-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: patient-tracker-web
+  template:
+    metadata:
+      labels:
+        app: patient-tracker-web
+    spec:
+      containers:
+        - name: web
+          image: patient-tracker-web:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
