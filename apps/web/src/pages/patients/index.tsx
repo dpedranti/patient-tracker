@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Box, CircularProgress, IconButton, Tooltip, Typography } from '@mui/material';
+import { useNotifications } from '@toolpad/core/useNotifications';
 import { MdAddCircle } from 'react-icons/md';
 import type { Patient, PatientCreate } from '../../types/patient';
 import { useCreatePatient, useDeletePatient, usePatients, useUpdatePatient } from './use-patients';
@@ -10,6 +11,7 @@ export default function PatientsPage() {
   const [editOpen, setEditOpen] = useState(false);
   const [editingPatient, setEditingPatient] = useState<Patient | null>(null);
 
+  const notifications = useNotifications();
   const { data: patients = [], isLoading } = usePatients();
   const createPatient = useCreatePatient();
   const updatePatient = useUpdatePatient();
@@ -26,14 +28,35 @@ export default function PatientsPage() {
   };
 
   const handleDelete = (id: number) => {
-    deletePatient.mutate(id);
+    deletePatient.mutate(id, {
+      onSuccess: () =>
+        notifications.show('Patient deleted', { severity: 'success', autoHideDuration: 3000 }),
+      onError: () =>
+        notifications.show('Failed to delete patient', { severity: 'error', autoHideDuration: 4000 }),
+    });
   };
 
   const handleSave = (data: PatientCreate) => {
     if (editingPatient) {
-      updatePatient.mutate({ id: editingPatient.id, data });
+      updatePatient.mutate(
+        { id: editingPatient.id, data },
+        {
+          onSuccess: () =>
+            notifications.show('Patient updated', { severity: 'success', autoHideDuration: 3000 }),
+          onError: () =>
+            notifications.show('Failed to update patient', {
+              severity: 'error',
+              autoHideDuration: 4000,
+            }),
+        },
+      );
     } else {
-      createPatient.mutate(data);
+      createPatient.mutate(data, {
+        onSuccess: () =>
+          notifications.show('Patient added', { severity: 'success', autoHideDuration: 3000 }),
+        onError: () =>
+          notifications.show('Failed to add patient', { severity: 'error', autoHideDuration: 4000 }),
+      });
     }
     setEditOpen(false);
   };

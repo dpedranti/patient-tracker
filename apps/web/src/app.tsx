@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
+import { NotificationsProvider } from '@toolpad/core/useNotifications';
 import type { Navigation } from '@toolpad/core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { IoPulse, IoPeople } from 'react-icons/io5';
@@ -45,9 +46,21 @@ export default function App() {
         router={ROUTER}
         theme={{ light: lightTheme, dark: darkTheme }}
       >
-        <DashboardLayout defaultSidebarCollapsed sidebarExpandedWidth={250}>
-          <PatientsPage />
-        </DashboardLayout>
+        <NotificationsProvider
+          slotProps={{
+            snackbar: {
+              anchorOrigin: { vertical: 'top', horizontal: 'right' },
+              sx: {
+                transform: 'translate(4px, -4px)',
+                '& .MuiAlert-root': { boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)' },
+              },
+            },
+          }}
+        >
+          <DashboardLayout defaultSidebarCollapsed sidebarExpandedWidth={250}>
+            <PatientsPage />
+          </DashboardLayout>
+        </NotificationsProvider>
       </AppProvider>
     </QueryClientProvider>
   );

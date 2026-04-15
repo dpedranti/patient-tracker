@@ -69,7 +69,14 @@ export default function PatientEdit({ open, patient, onClose, onSave }: PatientE
   }, [open, patient, reset]);
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth TransitionComponent={SlideUp}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      TransitionComponent={SlideUp}
+      PaperProps={{ sx: { borderRadius: 4 } }}
+    >
       <DialogTitle>{patient ? 'Edit Patient' : 'Add Patient'}</DialogTitle>
       <DialogContent>
         <Box
@@ -182,7 +189,7 @@ export default function PatientEdit({ open, patient, onClose, onSave }: PatientE
           />
         </Box>
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ px: 3, pb: 2 }}>
         <Button onClick={onClose}>Cancel</Button>
         <Button onClick={handleSubmit(onSave)} variant="contained">
           Save
